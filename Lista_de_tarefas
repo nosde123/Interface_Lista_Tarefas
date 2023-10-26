@@ -6,93 +6,104 @@ import java.util.ArrayList;
 
 public class ListadeTarefas extends JFrame {
 
-    private JLabel ListadeTarefas;
-    private JPanel painel = new JPanel();
-    private JButton jButtonAdicionarTarefas1 = new JButton("1. Adicionar tarefa");
-    private JButton jButtonRemoverTarefas2 = new JButton("2. Remover tarefa");
-    private JButton jButtonListarTarefas3 = new JButton("3. Listar tarefas");
-    private JButton jButtonSair = new JButton("SAIR");
-    public JLabel jLabel = new JLabel("teste");
-    int opcao = -1;
-
     private ArrayList<String> tarefas = new ArrayList<>();
 
+    private JButton adicionarButton = new JButton("Adicionar Tarefa");
+    private JButton removerButton = new JButton("Remover Tarefa");
+    private JButton listarButton = new JButton("Listar Tarefas");
+    private JButton sairButton = new JButton("Sair");
+
     public ListadeTarefas() {
-        this.setTitle("Lista de tarefas");
-        this.setSize(300, 200);
+        initUI();
+    }
 
-        painel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 20));
-        painel.setBackground(new Color(45, 30, 50));
-        painel.add(jButtonAdicionarTarefas1);
-        painel.add(jButtonRemoverTarefas2);
-        painel.add(jButtonListarTarefas3);
-        painel.add(jButtonSair);
+    private void initUI() {
+        setTitle("Lista de Tarefas");
+        setSize(300, 200);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        jButtonAdicionarTarefas1.addActionListener(new ActionListener() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 20));
+        panel.setBackground(new Color(45, 30, 50));
+
+        panel.add(adicionarButton);
+        panel.add(removerButton);
+        panel.add(listarButton);
+        panel.add(sairButton);
+
+        add(panel);
+
+        adicionarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String tarefa = JOptionPane.showInputDialog("Por favor, adicione uma tarefa:");
-                if (tarefa != null && !tarefa.isEmpty()) {
-                    adicionarTarefa(tarefa);
-                    JOptionPane.showMessageDialog(null, "Tarefa adicionada com sucesso");
-                }
+                adicionarTarefa();
             }
         });
 
-        jButtonRemoverTarefas2.addActionListener(new ActionListener() {
+        removerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (tarefas.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Não há tarefas para remover.");
-                } else {
-                    int index = Integer.parseInt(JOptionPane.showInputDialog("Informe o índice da tarefa a ser removida:"));
-                    if (index >= 0 && index < tarefas.size()) {
-                        removerTarefa(index);
-                        JOptionPane.showMessageDialog(null, "Tarefa removida com sucesso");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Índice inválido");
-                    }
-                }
+                removerTarefa();
             }
         });
 
-        jButtonListarTarefas3.addActionListener(new ActionListener() {
+        listarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (tarefas.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Não há tarefas para listar.");
-                } else {
-                    String lista = "Lista de Tarefas:\n";
-                    for (int i = 0; i < tarefas.size(); i++) {
-                        lista += (i + 1) + ". " + tarefas.get(i) + "\n";
-                    }
-                    JOptionPane.showMessageDialog(null, lista);
-                }
+                listarTarefas();
             }
         });
 
-        jButtonSair.addActionListener(new ActionListener() {
+        sairButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
 
-        this.getContentPane().add(painel);
-        this.setLocationRelativeTo(null); // Centralizar janela
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setVisible(true); // Exibir janela
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
-    private void adicionarTarefa(String tarefa) {
-        tarefas.add(tarefa);
+    private void adicionarTarefa() {
+        String tarefa = JOptionPane.showInputDialog("Por favor, adicione uma tarefa:");
+        if (tarefa != null && !tarefa.isEmpty()) {
+            tarefas.add(tarefa);
+            JOptionPane.showMessageDialog(null, "Tarefa adicionada com sucesso");
+        }
     }
 
-    private void removerTarefa(int index) {
-        tarefas.remove(index);
+    private void removerTarefa() {
+        if (tarefas.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Não há tarefas para remover.");
+            return;
+        }
+
+        int index = Integer.parseInt(JOptionPane.showInputDialog("Informe o índice da tarefa a ser removida:"));
+        if (index >= 0 && index < tarefas.size()) {
+            tarefas.remove(index);
+            JOptionPane.showMessageDialog(null, "Tarefa removida com sucesso");
+        } else {
+            JOptionPane.showMessageDialog(null, "Índice inválido");
+        }
+    }
+
+    private void listarTarefas() {
+        if (tarefas.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Não há tarefas para listar.");
+            return;
+        }
+
+        StringBuilder lista = new StringBuilder("Lista de Tarefas:\n");
+        for (int i = 0; i < tarefas.size(); i++) {
+            lista.append((i + 1)).append(". ").append(tarefas.get(i)).append("\n");
+        }
+        JOptionPane.showMessageDialog(null, lista.toString());
     }
 
     public static void main(String[] args) {
-        new ListadeTarefas();
+        SwingUtilities.invokeLater(() -> {
+            new ListadeTarefas();
+        });
     }
 }
