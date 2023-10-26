@@ -1,0 +1,89 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+public class ListaTarefas {
+    public static void main(String[] args) {
+        ArrayList<String> tarefas = new ArrayList<String>();
+
+        JFrame frame = new JFrame("Aplicativo de Lista de Tarefas");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setLayout(new FlowLayout());
+
+        JButton adicionarButton = new JButton("Adicionar Tarefa");
+        JButton removerButton = new JButton("Remover Tarefa");
+        JButton listarButton = new JButton("Listar Tarefas");
+        JButton sairButton = new JButton("Sair");
+
+        JTextField tarefaTextField = new JTextField(20);
+        JTextField indiceTextField = new JTextField(5);
+
+        JTextArea tarefasTextArea = new JTextArea(10, 30);
+
+        adicionarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String tarefa = tarefaTextField.getText();
+                adicionarTarefa(tarefas, tarefa);
+                tarefaTextField.setText("");
+            }
+        });
+
+        removerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int indice = Integer.parseInt(indiceTextField.getText());
+                    removerTarefa(tarefas, indice);
+                    indiceTextField.setText("");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Índice inválido. Digite um número.");
+                }
+            }
+        });
+
+        listarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tarefasTextArea.setText("");
+                listarTarefas(tarefas, tarefasTextArea);
+            }
+        });
+
+        sairButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        frame.add(adicionarButton);
+        frame.add(tarefaTextField);
+        frame.add(removerButton);
+        frame.add(indiceTextField);
+        frame.add(listarButton);
+        frame.add(tarefasTextArea);
+        frame.add(sairButton);
+
+        frame.setVisible(true);
+    }
+
+    private static void adicionarTarefa(ArrayList<String> tarefas, String tarefa) {
+        tarefas.add(tarefa);
+    }
+
+    private static void removerTarefa(ArrayList<String> tarefas, int indice) {
+        if (indice >= 0 && indice < tarefas.size()) {
+            tarefas.remove(indice);
+        }
+    }
+
+    private static void listarTarefas(ArrayList<String> tarefas, JTextArea tarefasTextArea) {
+        for (int i = 0; i < tarefas.size(); i++) {
+            tarefasTextArea.append(i + ". " + tarefas.get(i) + "\n");
+        }
+    }
+}
